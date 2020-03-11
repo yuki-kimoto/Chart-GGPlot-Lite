@@ -40,11 +40,17 @@ sub draw {
   
   $imager->polyline(points=>[[$axis_min_x, $axis_min_y], [$axis_min_x, $axis_max_y], [$axis_max_x, $axis_max_y], [$axis_max_x, $axis_min_y], [$axis_min_x, $axis_min_y]], color => $jiku_color);
 
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 5, $axis_min_y + 10], [$axis_min_x + $x_unit * 5, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 10, $axis_min_y + 10], [$axis_min_x + $x_unit * 10, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 15, $axis_min_y + 10], [$axis_min_x + $x_unit * 15, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 20, $axis_min_y + 10], [$axis_min_x + $x_unit * 20, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 25, $axis_min_y + 10], [$axis_min_x + $x_unit * 25, $axis_max_y]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x + $x_unit * 5, $axis_min_y], [$axis_min_x + $x_unit * 5, $axis_max_y]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x + $x_unit * 10, $axis_min_y], [$axis_min_x + $x_unit * 10, $axis_max_y]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x + $x_unit * 15, $axis_min_y], [$axis_min_x + $x_unit * 15, $axis_max_y]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x + $x_unit * 20, $axis_min_y], [$axis_min_x + $x_unit * 20, $axis_max_y]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x + $x_unit * 25, $axis_min_y], [$axis_min_x + $x_unit * 25, $axis_max_y]], color => $jiku_color);
+
+  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 5], [$axis_max_x, $axis_min_y - $y_unit * 5]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 10], [$axis_max_x, $axis_min_y - $y_unit * 10]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 15], [$axis_max_x, $axis_min_y - $y_unit * 15]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 20], [$axis_max_x, $axis_min_y - $y_unit * 20]], color => $jiku_color);
+  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 25], [$axis_max_x, $axis_min_y - $y_unit * 25]], color => $jiku_color);
 
   $self->{imager} = $imager;
 }
@@ -54,7 +60,7 @@ sub save {
   
   my $imager = $self->{imager};
   
-  $imager->write( file => 'public/graph.png', jpegquality => 90 )
+  $imager->write( file => 'public/a.png', jpegquality => 90 )
     or die $imager->errstr;
 }
 
