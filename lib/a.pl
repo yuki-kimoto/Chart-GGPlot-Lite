@@ -51,7 +51,27 @@ sub draw {
   $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 15], [$axis_max_x, $axis_min_y - $y_unit * 15]], color => $jiku_color);
   $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 20], [$axis_max_x, $axis_min_y - $y_unit * 20]], color => $jiku_color);
   $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 25], [$axis_max_x, $axis_min_y - $y_unit * 25]], color => $jiku_color);
-
+  
+  # add circle
+  my $point_color = Imager::Color->new('#70aeff');
+  
+  my $rows = [
+    {x => 100, y => 200},
+    {x => 130, y => 205},
+    {x => 120, y => 210},
+    {x => 130, y => 215},
+    {x => 140, y => 220},
+    {x => 150, y => 215},
+    {x => 160, y => 230},
+    {x => 170, y => 240},
+  ];
+  
+  for my $row (@$rows) {
+    my $x = $row->{x};
+    my $y = $row->{y};
+    $imager->circle(color => $point_color, r => 4, x => $x, y => $y, aa => 1);
+  }
+  
   $self->{imager} = $imager;
 }
 
