@@ -5,6 +5,7 @@ use Imager;
 use Imager::Color;
 use Math::Spline;
 use Math::Trig 'pi';
+use FindBin;
 
 package Chart::GGPlot::Lite;
 
@@ -72,6 +73,64 @@ sub draw {
     $imager->circle(color => $point_color, r => 4, x => $x, y => $y, aa => 1);
   }
   
+  my $font_file = "$FindBin::Bin/DejaVuSans.ttf";
+  my $font = Imager::Font->new(file => $font_file) or die;
+
+  # 軸目盛を書き込み
+  $imager->string(
+      x => 130,
+      y => 560,
+      string => "0.2",
+      utf8 => 1,
+      font => $font,
+      size => 15,
+      aa => 1,
+      color => '#333',
+  ) or die;
+  $imager->string(
+      x => 200,
+      y => 560,
+      string => "0.4",
+      utf8 => 1,
+      font => $font,
+      size => 15,
+      aa => 1,
+      color => '#333',
+  ) or die;
+
+  $imager->string(
+      x => 40,
+      y => 515,
+      string => "300",
+      utf8 => 1,
+      font => $font,
+      size => 15,
+      aa => 1,
+      color => '#333',
+  ) or die;
+
+  $imager->string(
+      x => 40,
+      y => 485,
+      string => "350",
+      utf8 => 1,
+      font => $font,
+      size => 15,
+      aa => 1,
+      color => '#333',
+  ) or die;
+
+  $imager->string(
+      x => 500,
+      y => 23,
+      string => "Sanpuzu",
+      utf8 => 1,
+      font => $font,
+      size => 28,
+      aa => 1,
+      color => '#333',
+  ) or die;
+
   $self->{imager} = $imager;
 }
 
@@ -115,8 +174,6 @@ $ggplot->theme_bw;
 $ggplot->draw;
 
 =cut
-
-use D;du $infos;
 
 #my $x_offset = 250;
 #my $y_offset = 250;
