@@ -67,6 +67,92 @@ sub draw {
     {x => 170, y => 240},
   ];
   
+  my $memori_range = 2;
+  
+  my $x_max;
+  my $x_min;
+  my $y_max;
+  my $y_min;
+  
+  for my $row (@$rows) {
+    my $x = $row->{x};
+    my $y = $row->{y};
+    
+    if (!defined $x_max || $x > $x_max) {
+      $x_max = $x;
+    }
+    if (!defined $x_min || $x < $x_min) {
+      $x_min = $x;
+    }
+    if (!defined $y_max || $y > $y_max) {
+      $y_max = $y;
+    }
+    if (!defined $y_min || $y < $y_min) {
+      $y_min = $y;
+    }
+  }
+  my $x_range = $x_max - $x_min;
+  my $y_range = $y_max - $y_min;
+  
+  use POSIX();
+
+  sub log10 {
+    my $x = shift;
+    return log($x) / log(10);
+  }
+  
+  sub GetAxisStep
+  {
+    my ($value) = @_;
+    
+    my $exponent = 10 ** POSIX::floor(log10($value));
+    my $significand = $value / $exponent;
+
+    my $axisStep;
+    if ($significand < 1.5)
+    {
+        $axisStep = 0.2 * $exponent;
+    }
+    elsif ($significand < 3.5)
+    {
+        $axisStep = 0.5 * $exponent;
+    }
+    elsif ($significand <= 5.0)
+    {
+        $axisStep = 1.0 * $exponent;
+    }
+    else
+    {
+        $axisStep = 2.0 * $exponent;
+    }
+    return $axisStep;
+  }
+
+=pod
+目盛り間隔は 
+1
+,
+2
+,
+5
+ の3通り、あるいはその 
+10
+ 倍や 
+100
+ 倍、
+1
+/
+10
+ 倍や 
+1
+/
+100
+ 倍などだけである。（3刻みや7刻みで数字が増えていく目盛りは（ほとんど）存在しない。）
+ 
+ 数値を伴った目盛りは最低でも2つ必要である。（もし数字の添えられた目盛りが1つまたは0であると、グラフの描かれた範囲がどれくらいの大きさであるのか判断できなくなってしまうので）
+ 
+=cut
+
   for my $row (@$rows) {
     my $x = $row->{x};
     my $y = $row->{y};
