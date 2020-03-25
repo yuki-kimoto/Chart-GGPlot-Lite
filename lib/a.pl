@@ -57,14 +57,14 @@ sub draw {
   my $point_color = Imager::Color->new('#70aeff');
   
   my $rows = [
-    {x => 100, y => 200},
-    {x => 130, y => 205},
-    {x => 120, y => 210},
-    {x => 130, y => 215},
-    {x => 140, y => 220},
-    {x => 150, y => 215},
-    {x => 160, y => 230},
-    {x => 170, y => 240},
+    {x => 101, y => 201},
+    {x => 131, y => 205},
+    {x => 121, y => 210},
+    {x => 131, y => 215},
+    {x => 141, y => 221},
+    {x => 151, y => 215},
+    {x => 161, y => 231},
+    {x => 171, y => 240},
   ];
   
   my $memori_range = 2;
@@ -216,6 +216,15 @@ sub draw {
       aa => 1,
       color => '#333',
   ) or die;
+  
+  my $axis_separate_count = 7;
+  
+  my $step = GetAxisStep($x_range);
+
+  my $x_min_axis = $step * int($x_min / $step) - $step;
+  my $x_max_axis = $step * int($x_max / $step) + $step * 2;
+  
+  use D;du [$x_min_axis, $x_max_axis, $x_min, $x_max, $step];
 
   $self->{imager} = $imager;
 }
