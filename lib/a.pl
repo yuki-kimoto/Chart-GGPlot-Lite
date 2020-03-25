@@ -19,55 +19,85 @@ sub new {
   return bless $self, ref $class || $class;
 }
 
+sub unit_value_to_value {
+  my ($unit_value) = @_;
+  
+  my $value;
+  if ($unit_value =~ s/^(.+)%$//) {
+    $value = $1 / 100;
+  }
+  
+  return $value;
+}
+
 sub draw {
   my ($self) = @_;
   
   # Create canvas
-  my $image_width = 1400;
-  my $image_height = 600;
-  my $img = Imager->new(xsize => $image_width, ysize => $image_height, channels => 4);
+  my $image_width_pixcel = 1400;
+  my $image_height_pixcel = 600;
+  my $img = Imager->new(xsize => $image_width_pixcel, ysize => $image_height_pixcel, channels => 4);
   
   # Drow canvas background
   my $color_canvas = Imager::Color->new(255, 255, 255);
-  $img->box(color => $color_canvas, xmin => 0, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
+  $img->box(color => $color_canvas, xmin => 0, ymin => 0, xmax => $image_width_pixcel, ymax => $image_height_pixcel, filled => 1);
   
   # Graph block width
   my $graph_block_width = 0.8;
-  
-  # Legend block width
-  my $legend_block_width = 0.2;
+  my $graph_block_width_pixcel = $image_width_pixcel * $graph_block_width;
   
   # Graph block background color
   my $color_graph_block = Imager::Color->new("#eee");
-  $img->box(color => $color_graph_block, xmin => 0, ymin => 0, xmax => $image_width * $graph_block_width, ymax => $image_height, filled => 1);
+  $img->box(color => $color_graph_block, xmin => 0, ymin => 0, xmax => $graph_block_width_pixcel, ymax => $image_height_pixcel, filled => 1);
   
   # Legend block background color
   my $color_legend_block = Imager::Color->new("#eef");
-  $img->box(color => $color_legend_block, xmin => $image_width * $graph_block_width, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
+  $img->box(color => $color_legend_block, xmin => $graph_block_width_pixcel, ymin => 0, xmax => $image_width_pixcel, ymax => $image_height_pixcel, filled => 1);
   
-  my $x_unit = $image_width / 100;
-  my $y_unit = $image_height / 100;
+  # Graph width
+  my $graph_padding_top = unit_value_to_value('10%');
+  my $graph_padding_top_pixcel = $image_height_pixcel * $graph_padding_top;
+  my $graph_padding_bottom = unit_value_to_value('10%');
+  my $graph_padding_bottom_pixcel = $image_height_pixcel * $graph_padding_bottom;
+  my $graph_padding_left = unit_value_to_value('8%');
+  my $graph_padding_left_pixcel = $graph_block_width_pixcel * $graph_padding_left;
+  my $graph_padding_right = unit_value_to_value('0');
+  my $graph_padding_right_pixcel = $graph_block_width_pixcel * $graph_padding_right;
+  
+  # use D;du [$graph_padding_top_pixcel, $graph_padding_bottom_pixcel, $graph_padding_left_pixcel, $graph_padding_right_pixcel];
+
+  my $color_axis_box_border = Imager::Color->new('#ccc');
+  $img->box(color => $color_axis_box_border, xmin => $graph_padding_left_pixcel, ymin => $graph_padding_top_pixcel, xmax => $graph_block_width_pixcel - $graph_padding_right_pixcel, ymax => $image_height_pixcel - $graph_padding_bottom_pixcel);
+  
+  # Legend width
+  my $legend_padding_top = unit_value_to_value('10%');
+  my $legend_padding_left = unit_value_to_value('10%');
+  my $legend_padding_right = unit_value_to_value('10%');
+  
+  # axis box colort
+  my $width_axis_box_border = 2;
+  
+  my $x_unit = $image_width_pixcel / 100;
+  my $y_unit = $image_height_pixcel / 100;
   
   my $axis_min_x = $x_unit * 5;
-  my $axis_min_y = ($image_height - $y_unit * 10);
-  my $axis_max_x = ($image_width - $x_unit * 20);
+  my $axis_min_y = ($image_height_pixcel - $y_unit * 10);
+  my $axis_max_x = ($image_width_pixcel - $x_unit * 20);
   my $axis_max_y = $y_unit * 5;
   
   my $jiku_color = Imager::Color->new('#ccc');
   
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y], [$axis_min_x, $axis_max_y], [$axis_max_x, $axis_max_y], [$axis_max_x, $axis_min_y], [$axis_min_x, $axis_min_y]], color => $jiku_color);
-
   $img->polyline(points=>[[$axis_min_x + $x_unit * 5, $axis_min_y], [$axis_min_x + $x_unit * 5, $axis_max_y]], color => $jiku_color);
   $img->polyline(points=>[[$axis_min_x + $x_unit * 10, $axis_min_y], [$axis_min_x + $x_unit * 10, $axis_max_y]], color => $jiku_color);
   $img->polyline(points=>[[$axis_min_x + $x_unit * 15, $axis_min_y], [$axis_min_x + $x_unit * 15, $axis_max_y]], color => $jiku_color);
   $img->polyline(points=>[[$axis_min_x + $x_unit * 20, $axis_min_y], [$axis_min_x + $x_unit * 20, $axis_max_y]], color => $jiku_color);
   $img->polyline(points=>[[$axis_min_x + $x_unit * 25, $axis_min_y], [$axis_min_x + $x_unit * 25, $axis_max_y]], color => $jiku_color);
 
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 5], [$axis_max_x, $axis_min_y - $y_unit * 5]], color => $jiku_color);
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 10], [$axis_max_x, $axis_min_y - $y_unit * 10]], color => $jiku_color);
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 15], [$axis_max_x, $axis_min_y - $y_unit * 15]], color => $jiku_color);
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 20], [$axis_max_x, $axis_min_y - $y_unit * 20]], color => $jiku_color);
-  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 25], [$axis_max_x, $axis_min_y - $y_unit * 25]], color => $jiku_color);
+  $img->polyline(points=>[[$graph_padding_left_pixcel, $axis_min_y - $y_unit * 5], [$graph_block_width_pixcel - $graph_padding_right_pixcel, $axis_min_y - $y_unit * 5]], color => $jiku_color);
+  $img->polyline(points=>[[$graph_padding_left_pixcel, $axis_min_y - $y_unit * 10], [$graph_block_width_pixcel - $graph_padding_right_pixcel, $axis_min_y - $y_unit * 10]], color => $jiku_color);
+  $img->polyline(points=>[[$graph_padding_left_pixcel, $axis_min_y - $y_unit * 15], [$graph_block_width_pixcel - $graph_padding_right_pixcel, $axis_min_y - $y_unit * 15]], color => $jiku_color);
+  $img->polyline(points=>[[$graph_padding_left_pixcel, $axis_min_y - $y_unit * 20], [$graph_block_width_pixcel - $graph_padding_right_pixcel, $axis_min_y - $y_unit * 20]], color => $jiku_color);
+  $img->polyline(points=>[[$graph_padding_left_pixcel, $axis_min_y - $y_unit * 25], [$graph_block_width_pixcel - $graph_padding_right_pixcel, $axis_min_y - $y_unit * 25]], color => $jiku_color);
   
   # add circle
   my $point_color = Imager::Color->new('#70aeff');
@@ -242,7 +272,7 @@ sub draw {
   
   my $x_axis_sep_count = $x_max_axis - $x_min_axis;
   
-  use D;du [$x_min_axis, $x_max_axis, $x_min, $x_max, $step];
+  # use D;du [$x_min_axis, $x_max_axis, $x_min, $x_max, $step];
 
   $self->{imager} = $img;
 }
