@@ -22,8 +22,14 @@ sub new {
 sub draw {
   my ($self) = @_;
   
+  # Create canvas
   my $image_width = 1400;
   my $image_height = 600;
+  my $img = Imager->new(xsize => $image_width, ysize => $image_height, channels => 4);
+  
+  # Drow white background
+  my $color_white = Imager::Color->new(255, 255, 255);
+  $img->box(color => $color_white, xmin => 0, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
   
   my $x_unit = $image_width / 100;
   my $y_unit = $image_height / 100;
@@ -33,25 +39,21 @@ sub draw {
   my $axis_max_x = ($image_width - $x_unit * 20);
   my $axis_max_y = $y_unit * 5;
   
-  my $imager = Imager->new(xsize => $image_width, ysize => $image_height, channels => 4);
-  
-  $imager->box(color => Imager::Color->new(255, 255, 255), xmin => 0, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
-  
   my $jiku_color = Imager::Color->new('#ccc');
   
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y], [$axis_min_x, $axis_max_y], [$axis_max_x, $axis_max_y], [$axis_max_x, $axis_min_y], [$axis_min_x, $axis_min_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y], [$axis_min_x, $axis_max_y], [$axis_max_x, $axis_max_y], [$axis_max_x, $axis_min_y], [$axis_min_x, $axis_min_y]], color => $jiku_color);
 
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 5, $axis_min_y], [$axis_min_x + $x_unit * 5, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 10, $axis_min_y], [$axis_min_x + $x_unit * 10, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 15, $axis_min_y], [$axis_min_x + $x_unit * 15, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 20, $axis_min_y], [$axis_min_x + $x_unit * 20, $axis_max_y]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x + $x_unit * 25, $axis_min_y], [$axis_min_x + $x_unit * 25, $axis_max_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x + $x_unit * 5, $axis_min_y], [$axis_min_x + $x_unit * 5, $axis_max_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x + $x_unit * 10, $axis_min_y], [$axis_min_x + $x_unit * 10, $axis_max_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x + $x_unit * 15, $axis_min_y], [$axis_min_x + $x_unit * 15, $axis_max_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x + $x_unit * 20, $axis_min_y], [$axis_min_x + $x_unit * 20, $axis_max_y]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x + $x_unit * 25, $axis_min_y], [$axis_min_x + $x_unit * 25, $axis_max_y]], color => $jiku_color);
 
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 5], [$axis_max_x, $axis_min_y - $y_unit * 5]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 10], [$axis_max_x, $axis_min_y - $y_unit * 10]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 15], [$axis_max_x, $axis_min_y - $y_unit * 15]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 20], [$axis_max_x, $axis_min_y - $y_unit * 20]], color => $jiku_color);
-  $imager->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 25], [$axis_max_x, $axis_min_y - $y_unit * 25]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 5], [$axis_max_x, $axis_min_y - $y_unit * 5]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 10], [$axis_max_x, $axis_min_y - $y_unit * 10]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 15], [$axis_max_x, $axis_min_y - $y_unit * 15]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 20], [$axis_max_x, $axis_min_y - $y_unit * 20]], color => $jiku_color);
+  $img->polyline(points=>[[$axis_min_x, $axis_min_y - $y_unit * 25], [$axis_max_x, $axis_min_y - $y_unit * 25]], color => $jiku_color);
   
   # add circle
   my $point_color = Imager::Color->new('#70aeff');
@@ -156,14 +158,14 @@ sub draw {
   for my $row (@$rows) {
     my $x = $row->{x};
     my $y = $row->{y};
-    $imager->circle(color => $point_color, r => 4, x => $x, y => $y, aa => 1);
+    $img->circle(color => $point_color, r => 4, x => $x, y => $y, aa => 1);
   }
   
   my $font_file = "$FindBin::Bin/DejaVuSans.ttf";
   my $font = Imager::Font->new(file => $font_file) or die;
 
   # 軸目盛を書き込み
-  $imager->string(
+  $img->string(
       x => 130,
       y => 560,
       string => "0.2",
@@ -173,7 +175,7 @@ sub draw {
       aa => 1,
       color => '#333',
   ) or die;
-  $imager->string(
+  $img->string(
       x => 200,
       y => 560,
       string => "0.4",
@@ -184,7 +186,7 @@ sub draw {
       color => '#333',
   ) or die;
 
-  $imager->string(
+  $img->string(
       x => 40,
       y => 515,
       string => "300",
@@ -195,7 +197,7 @@ sub draw {
       color => '#333',
   ) or die;
 
-  $imager->string(
+  $img->string(
       x => 40,
       y => 485,
       string => "350",
@@ -206,7 +208,7 @@ sub draw {
       color => '#333',
   ) or die;
 
-  $imager->string(
+  $img->string(
       x => 500,
       y => 23,
       string => "Sanpuzu",
@@ -224,18 +226,20 @@ sub draw {
   my $x_min_axis = $step * int($x_min / $step) - $step;
   my $x_max_axis = $step * int($x_max / $step) + $step * 2;
   
+  my $x_axis_sep_count = $x_max_axis - $x_min_axis;
+  
   use D;du [$x_min_axis, $x_max_axis, $x_min, $x_max, $step];
 
-  $self->{imager} = $imager;
+  $self->{imager} = $img;
 }
 
 sub save {
   my ($self) = @_;
   
-  my $imager = $self->{imager};
+  my $img = $self->{imager};
   
-  $imager->write( file => 'public/a.png', jpegquality => 90 )
-    or die $imager->errstr;
+  $img->write( file => 'public/a.png', jpegquality => 90 )
+    or die $img->errstr;
 }
 
 package main;
