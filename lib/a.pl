@@ -27,9 +27,23 @@ sub draw {
   my $image_height = 600;
   my $img = Imager->new(xsize => $image_width, ysize => $image_height, channels => 4);
   
-  # Drow white background
-  my $color_white = Imager::Color->new(255, 255, 255);
-  $img->box(color => $color_white, xmin => 0, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
+  # Drow canvas background
+  my $color_canvas = Imager::Color->new(255, 255, 255);
+  $img->box(color => $color_canvas, xmin => 0, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
+  
+  # Graph block width
+  my $graph_block_width = 0.8;
+  
+  # Legend block width
+  my $legend_block_width = 0.2;
+  
+  # Graph block background color
+  my $color_graph_block = Imager::Color->new("#eee");
+  $img->box(color => $color_graph_block, xmin => 0, ymin => 0, xmax => $image_width * $graph_block_width, ymax => $image_height, filled => 1);
+  
+  # Legend block background color
+  my $color_legend_block = Imager::Color->new("#eef");
+  $img->box(color => $color_legend_block, xmin => $image_width * $graph_block_width, ymin => 0, xmax => $image_width, ymax => $image_height, filled => 1);
   
   my $x_unit = $image_width / 100;
   my $y_unit = $image_height / 100;
